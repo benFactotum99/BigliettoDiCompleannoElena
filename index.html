@@ -41,7 +41,7 @@
         }
         #question {
             text-align: center;
-            font-size: 1.2em;
+            font-size: 1em;
         }
         .buttons {
             display: flex;
@@ -79,10 +79,10 @@
 <body>
     <div class="container">
         <video id="mainImage" src="./image/gattino-domanda.mp4" alt="Invito" width="300" autoplay loop muted playsinline style="object-fit:cover;display:block;border-radius:8px;"></video>
-        <div id="question">Vuoi venire alla mia festa di compleanno?</div>
+        <div id="question">Vuoi venire alla mia festa di compleanno?<br>Lunedì 7 luglio alle 20:30<br>Al Sesto Gusto in viale Casiraghi 113 (Sesto)<br><br>Importante: menù prefissato (non avete diritto di scelta)</div>
         <div class="buttons">
-            <button onclick="changeState(true)">Sì</button>
-            <button onclick="changeState(false)">No</button>
+            <button id="btnTrue" onclick="changeState(true)">Sì</button>
+            <button id="btnFalse" onclick="changeState(false)">No</button>
         </div>
     </div>
     <script>
@@ -96,12 +96,18 @@
         let ImmagineGattinoSiNonVengo2 = "./image/gattino-si-non-vengo-2.mp4";
         let ImmagineGattinoSiNonVengo3 = "./image/gattino-si-non-vengo-3.mp4";
 
-        let TestoDomanda = "Vuoi venire alla mia festa di compleanno?";
-        let TestoGattinoSi1 = "Yeeee!! Ci vediamo alla festa!";
-        let TestoGattinoNo1 = "Sicuro/a? Ci sarà la torta!";
+        let TestoDomanda = "Vuoi venire alla mia festa di compleanno?<br>Lunedì 7 luglio alle 20:30<br>Al Sesto Gusto in viale Casiraghi 113 (Sesto)<br><br>Importante: menù prefissato (non avete diritto di scelta)";
+        let TestoGattinoSi1 = "Yeee! Ci vediamo alla festa!";
+        let TestoGattinoNo1 = "Sei Sicura?";
 
-        let TestoGattinoSiNonVengo2 = "Daaaaaiii! Sicuro/a?? Mi stai rendendo triste...";
+        let TestoGattinoSiNonVengo2 = "Daaaii, ci sarà la torta...";
         let TestoGattinoSiNonVengo3 = "Nooooooooo!!!";
+
+        let textBtnTrueYes = "Sì";
+        let textBtnFalseNo = "No";
+
+        let textBtnTrueOkay = "Okay";    
+        let textBtnFalseNotWant = "Non la voglio";    
 
         function changeState(isYes) {            
 
@@ -124,30 +130,57 @@
             stato = 0;
             const img = document.getElementById('mainImage');
             img.src = ImmagineGattinoDomanda;
-            document.getElementById('question').textContent = TestoDomanda;
+            document.getElementById('question').innerHTML = TestoDomanda;
             document.querySelector('.buttons').style.display = 'flex';
+            document.getElementById('btnTrue').innerHTML = textBtnTrueYes;
+            document.getElementById('btnFalse').innerHTML = textBtnFalseNo;
+        }
+
+        function HappyEnd() {
+            stato = 0;
+            const img = document.getElementById('mainImage');
+            img.src = ImmagineGattinoSi1;
+            document.querySelector('.buttons').style.display = 'none';
+            document.getElementById('question').innerHTML = TestoGattinoSi1;               
+        }
+
+        function Sad1() {
+            stato++;
+            const img = document.getElementById('mainImage');
+            img.src = ImmagineGattinoNo1;
+            document.getElementById('question').innerHTML = TestoGattinoNo1;
+            document.getElementById('btnTrue').innerHTML = textBtnTrueYes;
+            document.getElementById('btnFalse').innerHTML = textBtnFalseNo;               
+        }
+
+        function Sad2() {
+            stato++;
+            const img = document.getElementById('mainImage');
+            img.src = ImmagineGattinoSiNonVengo2;
+            document.getElementById('question').innerHTML = TestoGattinoSiNonVengo2;
+            document.getElementById('btnTrue').innerHTML = textBtnTrueOkay;
+            document.getElementById('btnFalse').innerHTML = textBtnFalseNotWant;                
+        }
+
+        function SadEnd() {
+            stato++;
+            const img = document.getElementById('mainImage');
+            img.src = ImmagineGattinoSiNonVengo3;
+            document.querySelector('.buttons').style.display = 'none';
+            document.getElementById('question').innerHTML = TestoGattinoSiNonVengo3;            
         }
 
         function PrimaDomanda(isYes) {
-            const img = document.getElementById('mainImage');
             if (isYes) {
-                img.src = ImmagineGattinoSi1;
-                document.querySelector('.buttons').style.display = 'none';
-                document.getElementById('question').textContent = TestoGattinoSi1;
-                stato = 0;
+                HappyEnd();
             } else {
-                img.src = ImmagineGattinoNo1;
-                document.getElementById('question').textContent = TestoGattinoNo1;
-                stato++;
+                Sad1();
             }
         }
 
-        function SecondaDomanda(isYes) {
-            const img = document.getElementById('mainImage');
+        function SecondaDomanda(isYes) {            
             if (isYes) {
-                img.src = ImmagineGattinoSiNonVengo2;
-                document.getElementById('question').textContent = TestoGattinoSiNonVengo2;
-                stato++;
+                Sad2()
             } else {
                 resetState();
             }
@@ -156,12 +189,9 @@
         function TerzaDomanda(isYes) {
             const img = document.getElementById('mainImage');
             if (isYes) {
-                img.src = ImmagineGattinoSiNonVengo3;
-                document.querySelector('.buttons').style.display = 'none';
-                document.getElementById('question').textContent = TestoGattinoSiNonVengo3;
-                stato++;
+                HappyEnd();                
             } else {
-                resetState();
+               SadEnd(); 
             }
         }
     </script>
